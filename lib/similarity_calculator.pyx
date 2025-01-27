@@ -19,14 +19,14 @@ cdef class ParallelSimilarityCalculator:
     cdef readonly double text_weight
     cdef readonly double structure_weight
     cdef object executor
-    cdef int max_workers  # 明确声明为 int 类型
+    cdef int max_workers  # Explicitly declare as int type
 
     def __init__(self, max_workers=None, double text_weight=0.4, double structure_weight=0.6):
-        # 将 max_workers 转换为有效的整数值
+        # Convert max_workers to a valid integer value
         if max_workers is None:
-            self.max_workers = 0  # ThreadPoolExecutor 默认值
+            self.max_workers = 0  # Default value for ThreadPoolExecutor
         else:
-            self.max_workers = max_workers  # 确保是 int 类型
+            self.max_workers = max_workers  # Ensure it is of int type
 
         self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
         self.text_weight = text_weight
@@ -66,9 +66,9 @@ cdef class ParallelSimilarityCalculator:
         if m == 0 or n == 0:
             return 0.0
 
-        # 使用 memoryview 初始化动态规划矩阵
+        # Initialize the dynamic programming matrix using memoryview
         dp = cvarray(shape=(m + 1, n + 1), itemsize=sizeof(double), format="d")
-        dp[:, :] = 0.0  # 初始化所有值为 0.0
+        dp[:, :] = 0.0  # Initialize all values to 0.0
 
         for i in range(1, m + 1):
             for j in range(1, n + 1):
@@ -78,7 +78,7 @@ cdef class ParallelSimilarityCalculator:
         return dp[m][n] / fmax(m, n)
 
     def compare_batch(self, ast_pairs):
-        """多线程批量对比"""
+        """Multithreaded batch comparison"""
         cdef dict futures = {}
         cdef str f1, f2
         cdef dict ast1, ast2

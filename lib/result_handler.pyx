@@ -4,20 +4,20 @@ from pathlib import Path
 import json
 
 cdef list _get_sorted_pairs(dict sim_dict):
-    """Cython 内部使用的排序函数"""
+    """Internal sorting function for Cython"""
     cdef list pairs = []
     cdef tuple key
     cdef double value
     for key, value in sim_dict.items():
         if key[0] != key[1]:
             pairs.append((key, value))
-    pairs.sort(key=lambda x: -x[1])  # 排序逻辑
+    pairs.sort(key=lambda x: -x[1])  # Sorting logic
     return pairs
 
 cdef class ResultHandler:
     @staticmethod
     def matrix(dict sim_dict, list files):
-        """输出相似性矩阵"""
+        """Output similarity matrix"""
         cdef str header = "Files\t" + "\t".join([Path(f).name for f in files])
         print(header)
         cdef str f1, f2
@@ -34,7 +34,7 @@ cdef class ResultHandler:
 
     @staticmethod
     def topn(dict sim_dict, int n=5):
-        """输出 Top-N 相似对"""
+        """Output Top-N similar pairs"""
         cdef list sorted_pairs = _get_sorted_pairs(sim_dict)
         print(f"Top {n} Similar Pairs:")
         cdef tuple pair
@@ -44,7 +44,7 @@ cdef class ResultHandler:
 
     @staticmethod
     def json(dict sim_dict):
-        """生成 JSON 报告"""
+        """Generate JSON report"""
         cdef list report = [
             {"file1": f1, "file2": f2, "score": round(score, 4)}
             for (f1, f2), score in sim_dict.items()

@@ -11,7 +11,7 @@ parser = Parser(MARKDOWN_LANG)
 filtered_blocks = ["code_block", "html_block", "link", "image"]
 
 cdef dict _normalize_node(object node):
-    """Cython 内部使用的标准化函数"""
+    """Internal normalization function for Cython"""
     cdef list filtered_types = ['link', 'image', 'code_block', 'html_block']
     cdef str text
     cdef list children = []
@@ -38,7 +38,7 @@ cdef class ASTProcessor:
     @staticmethod
     @lru_cache(maxsize=100)
     def parse(str file_path):
-        """解析文件并生成标准化 AST"""
+        """Parse file and generate normalized AST"""
         cdef bytes code
         with open(file_path, 'rb') as f:
             code = f.read()
@@ -47,5 +47,5 @@ cdef class ASTProcessor:
 
     @staticmethod
     def normalize(object node):
-        """标准化节点结构 (调用内部 Cython 函数)"""
+        """Normalize node structure (calls internal Cython function)"""
         return _normalize_node(node)
