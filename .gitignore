@@ -1,0 +1,8 @@
+venv
+.vscode
+.ruff_cache
+data
+build
+__pycache__
+*.c
+*.so
