@@ -1,0 +1,4 @@
+tqdm
+tree-sitter
+tree_sitter_markdown
+numpy
