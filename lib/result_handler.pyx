@@ -2,6 +2,7 @@
 cimport cython
 from pathlib import Path
 import json
+from prettytable import PrettyTable
 
 cdef list _get_sorted_pairs(dict sim_dict):
     """Internal sorting function for Cython"""
@@ -19,9 +20,12 @@ cdef class ResultHandler:
     def matrix(dict sim_dict, list files):
         """Output similarity matrix"""
         cdef str header = "Files\t" + "\t".join([Path(f).name for f in files])
-        print(header)
+        # print(header)
         cdef str f1, f2
         cdef list row
+        table = PrettyTable()
+        table.field_names = ["Files"] + [Path(f).name for f in files]
+
         for f1 in files:
             row = []
             for f2 in files:
@@ -30,7 +34,9 @@ cdef class ResultHandler:
                 else:
                     score = sim_dict.get((f1, f2), sim_dict.get((f2, f1), 0.0))
                     row.append(f"{score:.2f}")
-            print(f"{Path(f1).name}\t" + "\t".join(row))
+            # print(f"{Path(f1).name}\t" + "\t".join(row))
+            table.add_row([f"{Path(f1).name}"] + row)
+        print(table)
 
     @staticmethod
     def topn(dict sim_dict, int n=5):
